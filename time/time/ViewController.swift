@@ -7,6 +7,7 @@
 //
 
 import Cocoa
+import IOKit.ps
 
 class ViewController: NSViewController {
 
@@ -19,10 +20,19 @@ class ViewController: NSViewController {
         }
     }
 
+    var timer: Timer?
+
     let timeFormatter: DateFormatter = {
         let formatter = DateFormatter()
         formatter.dateStyle = .none
         formatter.timeStyle = .short
+        return formatter
+    }()
+
+    let percentFormatter: NumberFormatter = {
+        let formatter = NumberFormatter()
+        formatter.numberStyle = .percent
+        formatter.maximumFractionDigits = 0
         return formatter
     }()
 
@@ -47,15 +57,18 @@ class ViewController: NSViewController {
         let y = screen.frame.size.height - windowHeight - 5
         let rect = NSMakeRect(x, y, windowWidth, windowHeight)
         window.setFrame(rect, display: true)
+
+        NSWorkspace.shared.notificationCenter.addObserver(self, selector: #selector(firstInterfaceUpdate), name: NSWorkspace.didWakeNotification, object: nil)
     }
 
     // MARK: - Interface Updates
 
-    func firstInterfaceUpdate() {
+    @objc func firstInterfaceUpdate() {
         updateInterface()
 
         let comp =  Calendar.current.dateComponents([.second], from: Date())
-        Timer.scheduledTimer(withTimeInterval: TimeInterval(60 - (comp.second ?? 0)), repeats: false) { [weak self] _ in
+        timer?.invalidate()
+        timer = Timer.scheduledTimer(withTimeInterval: TimeInterval(61 - (comp.second ?? 0)), repeats: false) { [weak self] _ in
 
             self?.updateInterface()
             Timer.scheduledTimer(timeInterval: 60,
@@ -69,8 +82,33 @@ class ViewController: NSViewController {
 
     @objc func updateInterface() {
         DispatchQueue.main.async {
-            self.textField.stringValue = self.timeFormatter.string(from: Date())
+            let battery = self.batteyLevel()
+            if battery <= 0.20,
+                let batteryPercent = self.percentFormatter.string(from: NSNumber(value: battery)) {
+                self.textField.stringValue = self.timeFormatter.string(from: Date()).components(separatedBy: " ")[0] + " (" + batteryPercent + ")"
+                self.textField.font = NSFont.systemFont(ofSize: 16, weight: .medium)
+                self.textField.frame = NSRect(x: 0, y: -11, width: 100, height: 50)
+                self.effectView.frame = NSRect(x: 0, y: 10, width: 100, height: 40)
+            } else {
+                self.textField.stringValue = self.timeFormatter.string(from: Date()).components(separatedBy: " ")[0]
+                self.textField.font = NSFont.systemFont(ofSize: 30, weight: .medium)
+                self.textField.frame = NSRect(x: 0, y: -7, width: 100, height: 50)
+                self.effectView.frame = NSRect(x: 0, y: 0, width: 100, height: 50)
+            }
         }
+    }
+
+    func batteyLevel() -> Double {
+        let powerInfo = IOPSCopyPowerSourcesInfo().takeUnretainedValue()
+        guard let powerList = IOPSCopyPowerSourcesList(powerInfo).takeUnretainedValue() as? [[String: Any]],
+            let battery = powerList.first else {
+                fatalError()
+        }
+        guard let currentCapactiy = battery[kIOPSCurrentCapacityKey] as? Double,
+            let maxCapactiy = battery[kIOPSMaxCapacityKey] as? Double else {
+                fatalError()
+        }
+        return currentCapactiy / maxCapactiy
     }
 
 }
