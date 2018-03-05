@@ -18,6 +18,7 @@ class ClearWindow: NSWindow {
         backgroundColor = NSColor.clear
         isMovableByWindowBackground = true
         level = .floating
+        hasShadow = false
 
     }
 

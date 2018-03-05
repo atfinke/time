@@ -68,7 +68,7 @@ class ViewController: NSViewController {
 
         let comp =  Calendar.current.dateComponents([.second], from: Date())
         timer?.invalidate()
-        timer = Timer.scheduledTimer(withTimeInterval: TimeInterval(61 - (comp.second ?? 0)), repeats: false) { [weak self] _ in
+        timer = Timer.scheduledTimer(withTimeInterval: TimeInterval(60.1 - Double(comp.second ?? 0)), repeats: false) { [weak self] _ in
 
             self?.updateInterface()
             Timer.scheduledTimer(timeInterval: 60,
@@ -82,23 +82,42 @@ class ViewController: NSViewController {
 
     @objc func updateInterface() {
         DispatchQueue.main.async {
-            let battery = self.batteyLevel()
-            if battery <= 0.20,
+
+            guard let window = NSApplication.shared.windows.first else {
+                fatalError()
+            }
+
+            let battery = self.batteryLevel()
+            if battery <= 0.2,
                 let batteryPercent = self.percentFormatter.string(from: NSNumber(value: battery)) {
+
+                let yOriginOffset: CGFloat = window.frame.height == 40 ? 0 : 10
+                window.setFrame(NSRect(x: window.frame.origin.x,
+                                       y: window.frame.origin.y + yOriginOffset,
+                                       width: 100,
+                                       height: 40),
+                                display: true)
+
+
                 self.textField.stringValue = self.timeFormatter.string(from: Date()).components(separatedBy: " ")[0] + " (" + batteryPercent + ")"
                 self.textField.font = NSFont.systemFont(ofSize: 16, weight: .medium)
-                self.textField.frame = NSRect(x: 0, y: -11, width: 100, height: 50)
-                self.effectView.frame = NSRect(x: 0, y: 10, width: 100, height: 40)
+                self.textField.frame = NSRect(x: 0, y: -21, width: 100, height: 50)
             } else {
+                let yOriginOffset: CGFloat = window.frame.height == 40 ? -10 : 0
+                window.setFrame(NSRect(x: window.frame.origin.x,
+                                       y: window.frame.origin.y + yOriginOffset,
+                                       width: 100,
+                                       height: 50),
+                                display: true)
+
                 self.textField.stringValue = self.timeFormatter.string(from: Date()).components(separatedBy: " ")[0]
                 self.textField.font = NSFont.systemFont(ofSize: 30, weight: .medium)
                 self.textField.frame = NSRect(x: 0, y: -7, width: 100, height: 50)
-                self.effectView.frame = NSRect(x: 0, y: 0, width: 100, height: 50)
             }
         }
     }
 
-    func batteyLevel() -> Double {
+    func batteryLevel() -> Double {
         let powerInfo = IOPSCopyPowerSourcesInfo().takeUnretainedValue()
         guard let powerList = IOPSCopyPowerSourcesList(powerInfo).takeUnretainedValue() as? [[String: Any]],
             let battery = powerList.first else {

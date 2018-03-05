@@ -710,9 +710,8 @@
                         <rect key="frame" x="0.0" y="0.0" width="100" height="50"/>
                         <autoresizingMask key="autoresizingMask"/>
                         <subviews>
-                            <visualEffectView appearanceType="vibrantDark" fixedFrame="YES" blendingMode="behindWindow" material="dark" state="active" translatesAutoresizingMaskIntoConstraints="NO" id="YSl-vl-Szh">
+                            <visualEffectView appearanceType="vibrantDark" blendingMode="behindWindow" material="dark" state="active" translatesAutoresizingMaskIntoConstraints="NO" id="YSl-vl-Szh">
                                 <rect key="frame" x="0.0" y="0.0" width="100" height="50"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                             </visualEffectView>
                             <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" textCompletion="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Xhr-oP-Kfu">
                                 <rect key="frame" x="0.0" y="0.0" width="100" height="50"/>
@@ -724,6 +723,12 @@
                                 </textFieldCell>
                             </textField>
                         </subviews>
+                        <constraints>
+                            <constraint firstAttribute="trailing" secondItem="YSl-vl-Szh" secondAttribute="trailing" id="OjF-1g-aCv"/>
+                            <constraint firstItem="YSl-vl-Szh" firstAttribute="top" secondItem="m2S-Jp-Qdl" secondAttribute="top" id="Tei-Uf-yse"/>
+                            <constraint firstItem="YSl-vl-Szh" firstAttribute="leading" secondItem="m2S-Jp-Qdl" secondAttribute="leading" id="jB7-bs-Wg9"/>
+                            <constraint firstAttribute="bottom" secondItem="YSl-vl-Szh" secondAttribute="bottom" id="spH-st-nzy"/>
+                        </constraints>
                     </view>
                     <connections>
                         <outlet property="effectView" destination="YSl-vl-Szh" id="Ac8-kN-07w"/>
