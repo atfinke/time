@@ -20,6 +20,8 @@ class ClearWindow: NSWindow {
         level = .floating
         hasShadow = false
 
+        collectionBehavior = .canJoinAllSpaces
+
     }
 
 }

@@ -111,7 +111,7 @@ class ViewController: NSViewController {
                                 display: true)
 
                 self.textField.stringValue = self.timeFormatter.string(from: Date()).components(separatedBy: " ")[0]
-                self.textField.font = NSFont.systemFont(ofSize: 30, weight: .medium)
+                self.textField.font = NSFont.systemFont(ofSize: 30, weight: .semibold)
                 self.textField.frame = NSRect(x: 0, y: -7, width: 100, height: 50)
             }
         }
