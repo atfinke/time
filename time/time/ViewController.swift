@@ -7,20 +7,51 @@
 //
 
 import Cocoa
-import IOKit.ps
 
 class ViewController: NSViewController {
 
-    // MARK: - Properties
+    // MARK: - Interface Elements -
 
-    @IBOutlet weak var textField: NSTextField!
+    var timeTextField: NSTextField = {
+        let textField = NSTextField()
+        textField.alignment = .center
+        textField.textColor = .white
+        textField.isBezeled = false
+        textField.isEditable = false
+        textField.drawsBackground = false
+        return textField
+    }()
+
+    var batteryTextField: NSTextField = {
+        let textField = NSTextField()
+        textField.alignment = .center
+        textField.textColor = .white
+        textField.isBezeled = false
+        textField.isEditable = false
+        textField.drawsBackground = false
+        textField.font = NSFont.monospacedSystemFont(ofSize: 12, weight: .medium)
+        return textField
+    }()
+
+    var circleTextField: NSTextField = {
+        let textField = NSTextField()
+        textField.alignment = .center
+        textField.textColor = .white
+        textField.isBezeled = false
+        textField.isEditable = false
+        textField.drawsBackground = false
+        textField.stringValue = "88"
+        textField.font = NSFont.systemFont(ofSize: 10, weight: .medium)
+        return textField
+    }()
+    
     @IBOutlet weak var effectView: NSVisualEffectView! {
         didSet {
             effectView.wantsLayer = true
         }
     }
 
-    var timer: Timer?
+    // MARK: - Properties -
 
     let timeFormatter: DateFormatter = {
         let formatter = DateFormatter()
@@ -36,99 +67,150 @@ class ViewController: NSViewController {
         return formatter
     }()
 
-    // MARK: - View Life Cycle
+    var screenFrame: NSRect {
+        guard let screenFrame = NSScreen.main?.visibleFrame else {
+            fatalError()
+        }
+        return screenFrame
+    }
+
+    var isBatteryInfoDisplayed: Bool {
+        return batteryState() <= Design.showBatteryInfoLevel
+    }
+
+    var visibleWindowFrame: NSRect {
+        let height: CGFloat
+        if isBatteryInfoDisplayed {
+            height = Design.windowExpandedHeight
+        } else {
+            height = Design.windowHeight
+        }
+        return NSRect(x: screenFrame.maxX - Design.windowWidth + Design.windowOffset,
+                      y: screenFrame.maxY - height + Design.windowOffset,
+                      width: Design.windowWidth,
+                      height: height)
+    }
+
+    var offScreenWindowFrame: NSRect {
+        return NSRect(x: screenFrame.maxX - Design.windowPeek,
+                      y: screenFrame.maxY - Design.windowPeek,
+                      width: visibleWindowFrame.width,
+                      height: visibleWindowFrame.height)
+    }
+
+    var isVisible = false
+    var isDelayingUpdates = false
+    var needsToAlertLowBattery = true
+    var minuteAlignmentTimer: Timer?
+
+    // MARK: - View Life Cycle -
 
     override func viewWillAppear() {
         super.viewWillAppear()
 
         firstInterfaceUpdate()
 
-        effectView.layer?.masksToBounds = true
-        effectView.layer?.cornerRadius = 5.0
-
-        guard let window = NSApplication.shared.windows.first, let screen = window.screen else {
+        guard let view = self.view as? TrackingView else {
             fatalError()
         }
+        view.mouseExited = mouseExited
+        view.mouseEntered = mouseEntered
 
-        let windowWidth = window.frame.size.width
-        let windowHeight = window.frame.size.height
-
-        let x = screen.frame.size.width - windowWidth - 5
-        let y = screen.frame.size.height - windowHeight - 5
-        let rect = NSMakeRect(x, y, windowWidth, windowHeight)
-        window.setFrame(rect, display: true)
-
-        NSWorkspace.shared.notificationCenter.addObserver(self, selector: #selector(firstInterfaceUpdate), name: NSWorkspace.didWakeNotification, object: nil)
+        NSWorkspace.shared.notificationCenter.addObserver(self,
+                                                          selector: #selector(firstInterfaceUpdate),
+                                                          name: NSWorkspace.didWakeNotification,
+                                                          object: nil)
     }
 
-    // MARK: - Interface Updates
+    // MARK: - Interface Updates -
 
     @objc func firstInterfaceUpdate() {
+        effectView.layer?.masksToBounds = true
+        effectView.layer?.cornerRadius = 10
+ 
+        view.addSubview(timeTextField)
+        view.addSubview(batteryTextField)
+
         updateInterface()
 
-        let comp =  Calendar.current.dateComponents([.second], from: Date())
-        timer?.invalidate()
-        timer = Timer.scheduledTimer(withTimeInterval: TimeInterval(60.1 - Double(comp.second ?? 0)), repeats: false) { [weak self] _ in
-
+        let comp = Calendar.current.dateComponents([.second], from: Date())
+        minuteAlignmentTimer?.invalidate()
+        let nextMinute = TimeInterval(60.1 - Double(comp.second ?? 0))
+        minuteAlignmentTimer = Timer.scheduledTimer(withTimeInterval: nextMinute, repeats: false) { [weak self] _ in
             self?.updateInterface()
             Timer.scheduledTimer(timeInterval: 60,
                                  target: self as Any,
                                  selector: #selector(self?.updateInterface),
                                  userInfo: nil,
                                  repeats: true)
-
         }
     }
 
     @objc func updateInterface() {
-        DispatchQueue.main.async {
+        let batteryLevel = batteryState()
+        guard let window = NSApplication.shared.windows.first,
+            let batteryDisplayPercent = percentFormatter.string(from: NSNumber(value: Double(batteryLevel))) else {
+            fatalError()
+        }
 
-            guard let window = NSApplication.shared.windows.first else {
-                fatalError()
-            }
+        // Show Battery
+        if batteryLevel > Design.showBatteryInfoLevel {
+            needsToAlertLowBattery = true
+        }
+        if needsToAlertLowBattery && batteryLevel < Design.showBatteryInfoLevel {
+            needsToAlertLowBattery = false
+            isVisible = true
+        }
 
-            let battery = self.batteryLevel()
-            if battery <= 0.2,
-                let batteryPercent = self.percentFormatter.string(from: NSNumber(value: battery)) {
+        // Animating transition
+        timeTextField.animator().isHidden = !isVisible
+        batteryTextField.animator().isHidden = !isVisible || !isBatteryInfoDisplayed
 
-                let yOriginOffset: CGFloat = window.frame.height == 40 ? 0 : 10
-                window.setFrame(NSRect(x: window.frame.origin.x,
-                                       y: window.frame.origin.y + yOriginOffset,
-                                       width: 100,
-                                       height: 40),
-                                display: true)
+        let frame = isVisible ? visibleWindowFrame : offScreenWindowFrame
+        window.setFrame(frame,
+                        display: true,
+                        animate: true)
+        timeTextField.font = isBatteryInfoDisplayed ? Design.timeExpandedFont : Design.timeFont
+        timeTextField.stringValue = timeFormatter.string(from: Date())
+        batteryTextField.stringValue = "-- \(batteryDisplayPercent) --"
 
+        timeTextField.sizeToFit()
+        batteryTextField.sizeToFit()
 
-                self.textField.stringValue = self.timeFormatter.string(from: Date()).components(separatedBy: " ")[0] + " (" + batteryPercent + ")"
-                self.textField.font = NSFont.systemFont(ofSize: 16, weight: .medium)
-                self.textField.frame = NSRect(x: 0, y: -21, width: 100, height: 50)
-            } else {
-                let yOriginOffset: CGFloat = window.frame.height == 40 ? -10 : 0
-                window.setFrame(NSRect(x: window.frame.origin.x,
-                                       y: window.frame.origin.y + yOriginOffset,
-                                       width: 100,
-                                       height: 50),
-                                display: true)
+        let availableHeight = window.frame.height - Design.windowOffset
+        let timeTextFieldHeight = timeTextField.frame.height
+        let timeTextFieldY = availableHeight
+            - Design.windowTextFieldOffset
+            - timeTextFieldHeight
 
-                self.textField.stringValue = self.timeFormatter.string(from: Date()).components(separatedBy: " ")[0]
-                self.textField.font = NSFont.systemFont(ofSize: 30, weight: .semibold)
-                self.textField.frame = NSRect(x: 0, y: -7, width: 100, height: 50)
-            }
+        timeTextField.frame = NSRect(x: 2,
+                                     y: timeTextFieldY,
+                                     width: Design.windowWidth - Design.windowOffset,
+                                     height: timeTextField.frame.height)
+
+        let batteryTextFieldHeight = batteryTextField.frame.height
+        let batteryTextFieldY = timeTextFieldY - batteryTextFieldHeight
+        batteryTextField.frame = NSRect(x: 2,
+                                        y: batteryTextFieldY,
+                                        width: Design.windowWidth - Design.windowOffset,
+                                        height: batteryTextField.frame.height)
+
+        }
+
+    // MARK: - TrackingView Updates -
+
+    func mouseExited() {
+        Timer.scheduledTimer(withTimeInterval: 0.5, repeats: false) { _ in
+            self.isDelayingUpdates = false
         }
     }
 
-    func batteryLevel() -> Double {
-        let powerInfo = IOPSCopyPowerSourcesInfo().takeUnretainedValue()
-        guard let powerList = IOPSCopyPowerSourcesList(powerInfo).takeUnretainedValue() as? [[String: Any]],
-            let battery = powerList.first else {
-                fatalError()
-        }
-        guard let currentCapactiy = battery[kIOPSCurrentCapacityKey] as? Double,
-            let maxCapactiy = battery[kIOPSMaxCapacityKey] as? Double else {
-                fatalError()
-        }
-        return currentCapactiy / maxCapactiy
+    func mouseEntered() {
+        guard !isDelayingUpdates else { return }
+        isDelayingUpdates = true
+        isVisible.toggle()
+        updateInterface()
     }
-
 }
+
 

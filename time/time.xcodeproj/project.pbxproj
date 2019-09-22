@@ -7,14 +7,19 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		143EAD0122D082CA0085EA4D /* TrackingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 143EAD0022D082CA0085EA4D /* TrackingView.swift */; };
+		143EAD0322D0989F0085EA4D /* Design.swift in Sources */ = {isa = PBXBuildFile; fileRef = 143EAD0222D0989F0085EA4D /* Design.swift */; };
+		143EAD0522D098BA0085EA4D /* ViewController+Battery.swift in Sources */ = {isa = PBXBuildFile; fileRef = 143EAD0422D098BA0085EA4D /* ViewController+Battery.swift */; };
 		1449B41C2049BF0400ACA697 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1449B41B2049BF0400ACA697 /* AppDelegate.swift */; };
 		1449B41E2049BF0400ACA697 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1449B41D2049BF0400ACA697 /* ViewController.swift */; };
 		1449B4202049BF0400ACA697 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 1449B41F2049BF0400ACA697 /* Assets.xcassets */; };
 		1449B4232049BF0400ACA697 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 1449B4212049BF0400ACA697 /* Main.storyboard */; };
-		1449B42C2049C79300ACA697 /* ClearWindow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1449B42B2049C79300ACA697 /* ClearWindow.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		143EAD0022D082CA0085EA4D /* TrackingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrackingView.swift; sourceTree = "<group>"; };
+		143EAD0222D0989F0085EA4D /* Design.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Design.swift; sourceTree = "<group>"; };
+		143EAD0422D098BA0085EA4D /* ViewController+Battery.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ViewController+Battery.swift"; sourceTree = "<group>"; };
 		1449B4182049BF0400ACA697 /* time.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = time.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		1449B41B2049BF0400ACA697 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		1449B41D2049BF0400ACA697 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -22,7 +27,6 @@
 		1449B4222049BF0400ACA697 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		1449B4242049BF0400ACA697 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		1449B4252049BF0400ACA697 /* time.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = time.entitlements; sourceTree = "<group>"; };
-		1449B42B2049C79300ACA697 /* ClearWindow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClearWindow.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -57,7 +61,9 @@
 			children = (
 				1449B41B2049BF0400ACA697 /* AppDelegate.swift */,
 				1449B41D2049BF0400ACA697 /* ViewController.swift */,
-				1449B42B2049C79300ACA697 /* ClearWindow.swift */,
+				143EAD0422D098BA0085EA4D /* ViewController+Battery.swift */,
+				143EAD0022D082CA0085EA4D /* TrackingView.swift */,
+				143EAD0222D0989F0085EA4D /* Design.swift */,
 				1449B41F2049BF0400ACA697 /* Assets.xcassets */,
 				1449B4212049BF0400ACA697 /* Main.storyboard */,
 				1449B4242049BF0400ACA697 /* Info.plist */,
@@ -93,11 +99,12 @@
 			isa = PBXProject;
 			attributes = {
 				LastSwiftUpdateCheck = 0920;
-				LastUpgradeCheck = 0920;
+				LastUpgradeCheck = 1100;
 				ORGANIZATIONNAME = "Andrew Finke";
 				TargetAttributes = {
 					1449B4172049BF0400ACA697 = {
 						CreatedOnToolsVersion = 9.2;
+						LastSwiftMigration = 1100;
 						ProvisioningStyle = Automatic;
 					};
 				};
@@ -137,9 +144,11 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				1449B42C2049C79300ACA697 /* ClearWindow.swift in Sources */,
 				1449B41E2049BF0400ACA697 /* ViewController.swift in Sources */,
 				1449B41C2049BF0400ACA697 /* AppDelegate.swift in Sources */,
+				143EAD0122D082CA0085EA4D /* TrackingView.swift in Sources */,
+				143EAD0522D098BA0085EA4D /* ViewController+Battery.swift in Sources */,
+				143EAD0322D0989F0085EA4D /* Design.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -171,6 +180,7 @@
 				CLANG_WARN_BOOL_CONVERSION = YES;
 				CLANG_WARN_COMMA = YES;
 				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
 				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
 				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
 				CLANG_WARN_EMPTY_BODY = YES;
@@ -178,6 +188,7 @@
 				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
 				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
 				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
@@ -228,6 +239,7 @@
 				CLANG_WARN_BOOL_CONVERSION = YES;
 				CLANG_WARN_COMMA = YES;
 				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
 				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
 				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
 				CLANG_WARN_EMPTY_BODY = YES;
@@ -235,6 +247,7 @@
 				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
 				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
 				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
@@ -268,14 +281,17 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = time/time.entitlements;
+				CODE_SIGN_IDENTITY = "-";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				DEVELOPMENT_TEAM = 72S993BNAV;
+				ENABLE_HARDENED_RUNTIME = YES;
 				INFOPLIST_FILE = time/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
+				MACOSX_DEPLOYMENT_TARGET = 10.15;
 				PRODUCT_BUNDLE_IDENTIFIER = com.andrewfinke.time;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 4.0;
+				SWIFT_VERSION = 5.0;
 			};
 			name = Debug;
 		};
@@ -284,14 +300,17 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = time/time.entitlements;
+				CODE_SIGN_IDENTITY = "-";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				DEVELOPMENT_TEAM = 72S993BNAV;
+				ENABLE_HARDENED_RUNTIME = YES;
 				INFOPLIST_FILE = time/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
+				MACOSX_DEPLOYMENT_TARGET = 10.15;
 				PRODUCT_BUNDLE_IDENTIFIER = com.andrewfinke.time;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 4.0;
+				SWIFT_VERSION = 5.0;
 			};
 			name = Release;
 		};
