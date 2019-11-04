@@ -14,6 +14,7 @@
 		1449B41E2049BF0400ACA697 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1449B41D2049BF0400ACA697 /* ViewController.swift */; };
 		1449B4202049BF0400ACA697 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 1449B41F2049BF0400ACA697 /* Assets.xcassets */; };
 		1449B4232049BF0400ACA697 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 1449B4212049BF0400ACA697 /* Main.storyboard */; };
+		14CAF795236FA30000FBBCC3 /* ClearWindow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14CAF794236FA30000FBBCC3 /* ClearWindow.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -27,6 +28,7 @@
 		1449B4222049BF0400ACA697 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		1449B4242049BF0400ACA697 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		1449B4252049BF0400ACA697 /* time.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = time.entitlements; sourceTree = "<group>"; };
+		14CAF794236FA30000FBBCC3 /* ClearWindow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClearWindow.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -62,6 +64,7 @@
 				1449B41B2049BF0400ACA697 /* AppDelegate.swift */,
 				1449B41D2049BF0400ACA697 /* ViewController.swift */,
 				143EAD0422D098BA0085EA4D /* ViewController+Battery.swift */,
+				14CAF794236FA30000FBBCC3 /* ClearWindow.swift */,
 				143EAD0022D082CA0085EA4D /* TrackingView.swift */,
 				143EAD0222D0989F0085EA4D /* Design.swift */,
 				1449B41F2049BF0400ACA697 /* Assets.xcassets */,
@@ -147,6 +150,7 @@
 				1449B41E2049BF0400ACA697 /* ViewController.swift in Sources */,
 				1449B41C2049BF0400ACA697 /* AppDelegate.swift in Sources */,
 				143EAD0122D082CA0085EA4D /* TrackingView.swift in Sources */,
+				14CAF795236FA30000FBBCC3 /* ClearWindow.swift in Sources */,
 				143EAD0522D098BA0085EA4D /* ViewController+Battery.swift in Sources */,
 				143EAD0322D0989F0085EA4D /* Design.swift in Sources */,
 			);
