@@ -75,7 +75,7 @@ class ViewController: NSViewController {
     }
 
     var isBatteryInfoDisplayed: Bool {
-        return batteryState() <= Design.showBatteryInfoLevel
+        return batteryState().level <= Design.showBatteryInfoLevel
     }
 
     var visibleWindowFrame: NSRect {
@@ -147,17 +147,17 @@ class ViewController: NSViewController {
     }
 
     @objc func updateInterface() {
-        let batteryLevel = batteryState()
+        let battery = batteryState()
         guard let window = NSApplication.shared.windows.first,
-            let batteryDisplayPercent = percentFormatter.string(from: NSNumber(value: Double(batteryLevel))) else {
+            let batteryDisplayPercent = percentFormatter.string(from: NSNumber(value: Double(battery.level))) else {
             fatalError()
         }
 
         // Show Battery
-        if batteryLevel > Design.showBatteryInfoLevel {
+        if battery.level > Design.showBatteryInfoLevel {
             needsToAlertLowBattery = true
         }
-        if needsToAlertLowBattery && batteryLevel < Design.showBatteryInfoLevel {
+        if needsToAlertLowBattery && battery.level < Design.showBatteryInfoLevel {
             needsToAlertLowBattery = false
             isVisible = true
         }
@@ -172,7 +172,9 @@ class ViewController: NSViewController {
                         animate: true)
         timeTextField.font = isBatteryInfoDisplayed ? Design.timeExpandedFont : Design.timeFont
         timeTextField.stringValue = timeFormatter.string(from: Date())
-        batteryTextField.stringValue = "-- \(batteryDisplayPercent) --"
+        
+        let dividers = battery.isCharging ? "++" : "--"
+        batteryTextField.stringValue = "\(dividers) \(batteryDisplayPercent) \(dividers)"
 
         timeTextField.sizeToFit()
         batteryTextField.sizeToFit()
